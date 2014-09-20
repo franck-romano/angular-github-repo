@@ -3,42 +3,43 @@
 <head>
 
   <meta charset="UTF-8">
-  <title>jQuery Github</title>
+  <title>AngularJS GitHub Repository</title>
 
   <!-- Plugin CSS -->
-  <link rel="stylesheet" href="js/assets/base.css">
+  <link rel="stylesheet" href="bower_components/angular-github-repo/assets/base.css">
 
   <!-- Demo CSS -->
   <link rel="stylesheet" href="css/style.css">
 
 </head>
-<body>
+<body ng-app="myApp">
 
-  <a href="https://github.com/zenorocha/jquery-github">
+  <a href="https://github.com/lucasconstantino/angular-github-repo">
     <img class="github-ribbon" src="img/github-ribbon.png" alt="Fork me on GitHub">
   </a>
 
   <div class="title">
-    <h1>jQuery Github</h1>
-    <p>A jQuery plugin to display your favorite Github Repositories.<br>For more informations, visit our <a href="https://github.com/zenorocha/jquery-github">repository</a>.</p>
+    <h1>AngularJS GitHub</h1>
+    <p>An AngularJS service and directive to display your GitHub Repositories.<br>For more information, visit our <a href="https://github.com/lucasconstantino/angular-github-repo">repository</a>.</p>
   </div>
 
   <div class="projects">
-    <div data-repo="jquery-boilerplate/jquery-boilerplate"></div>
-    <div data-repo="zenorocha/diveintohtml5"></div>
-    <div data-repo="zenorocha/jquery-github"></div>
-    <div data-repo="zenorocha/hub.me"></div>
+    <div github-repo="lucasconstantino/SassySkeleton"></div>
+    <div github-repo="jquery-boilerplate/jquery-boilerplate"></div>
+    <div github-repo="lucasconstantino/ng-webkit"></div>
+    <div github-repo="lucasconstantino/angular-konami"></div>
   </div>
 
   <p class="credits">Made with love by <a href="http://zenorocha.com">Zeno Rocha</a>.</p>
+  <p class="credits">Forked with no shame by <a href="https://github.com/lucasconstantino">Lucas Constantino Silva</a>.</p>
 
   <img id="github-logo" src="img/github-cat.png" alt="Github Cat" />
 
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-  <script src="js/jquery.github.min.js"></script>
+  <script src="bower_components/angular/angular.min.js"></script>
+  <script src="bower_components/angular-github-repo/angular-github-repo.js"></script>
 
   <script>
-    $('[data-repo]').github();
+    angular.module('myApp', ['githubRepo']);
   </script>
 
 </body>
