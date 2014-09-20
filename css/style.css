@@ -61,6 +61,16 @@ h1 {
   padding: 30px;
 }
 
+.github-box {
+  float: left;
+  width: 337px;
+  margin: 0 20px 20px 0;
+}
+
+[github-repo]:nth-child(even) .github-box {
+  margin-right: 0;
+}
+
 /* Font-face */
 
 @font-face {
