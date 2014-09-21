@@ -7,39 +7,63 @@
 'use strict';
 
 angular.module('githubRepo', [])
-  .factory('GitHubRepo', function ($http, $q) {
+  .factory('GitHubRepo', function ($http, $q, $injector) {
 
-    var githubApi = 'https://api.github.com/repos/';
+    var githubApi = 'https://api.github.com/repos/'
+      , $cookieStore = $injector.has('$cookieStore') ? $injector.get('$cookieStore') : null;
 
     /**
      * GitHub Repository conntructor.
      */
-    function GitHubRepo(repo) {
-      this.name = repo.name;
-      this.description = repo.description;
-      this.url = repo.url;
-      this.forks = repo.forks_count;
-      this.issues = repo.open_issues;
-      this.pushedAt = new Date(repo.pushed_at);
-      this.stargazers = repo.stargazers_count;
-      this.author = repo.owner.login;
+    function GitHubRepo(data, repo) {
+      this.name = data.name;
+      this.description = data.description;
+      this.url = data.url;
+      this.forks = data.forks_count;
+      this.issues = data.open_issues;
+      this.pushedAt = new Date(data.pushed_at);
+      this.stargazers = data.stargazers_count;
+      this.author = data.owner.login;
 
-      this.fullData = repo;
+      // Save only necessary data to cookie cache.
+      this.setCache(repo);
+
+      this.fullData = data;
     }
 
+    /**
+     * Set cache, if available.
+     */
+    GitHubRepo.prototype.setCache = function (repo) {
+      $cookieStore && $cookieStore.put('githubRepo:' + repo, this);
+    };
+
     var factory = {};
+
+    /**
+     * Get cached data, if any.
+     */
+    factory.fecthCached = function (repo) {
+      return $cookieStore && $cookieStore.get('githubRepo:' + repo) || null;
+    };
 
     /**
      * Get GitHub Repository object for a given repo.
      */
     factory.fecth = function (repo) {
-      var deferred = $q.defer();
+      var deferred = $q.defer(),
+        cached = factory.fecthCached(repo);
 
-      $http.get(githubApi + repo)
-        .success(function (data) {
-          deferred.resolve(new GitHubRepo(data));
-        })
-        .error(deferred.reject);
+      if (cached) {
+        deferred.resolve(cached);
+      } else {
+        $http.get(githubApi + repo, { cache: true })
+          .success(function (data) {
+            deferred.resolve(new GitHubRepo(data, repo));
+          })
+          .error(deferred.reject);
+      }
+
 
       return deferred.promise;
     };
