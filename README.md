@@ -2,7 +2,7 @@
 
 [![Github Repo Demonstration](https://cloud.githubusercontent.com/assets/398893/3528396/064b1fa4-078f-11e4-8460-2593d190c2fc.png)](http://github.com/lucasconstantino/angular-github-repo/)
 
-> An AngularJS service and directive to display your GitHub Repositories.
+> An AngularJS service and directive to display your GitHub repositories in a nice and simple widget.
 
 ## Getting started
 
