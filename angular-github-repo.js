@@ -10,7 +10,15 @@ angular.module('githubRepo', [])
   .factory('GitHubRepo', function ($http, $q, $injector) {
 
     var githubApi = 'https://api.github.com/repos/'
-      , $cookieStore = $injector.has('$cookieStore') ? $injector.get('$cookieStore') : null;
+      , $localStorage = $injector.has('$localStorage') ? $injector.get('$localStorage') : null;
+
+    // Prepare localStorage cache, if not available.
+    if ($localStorage && !$localStorage.githubRepo) {
+      $localStorage.githubRepo = {};
+    }
+
+    // Grab caching object.
+    var cache = $localStorage && $localStorage.githubRepo || {};
 
     /**
      * GitHub Repository conntructor.
@@ -18,14 +26,14 @@ angular.module('githubRepo', [])
     function GitHubRepo(data, repo) {
       this.name = data.name;
       this.description = data.description;
-      this.url = data.url;
+      this.url = data.html_url;
       this.forks = data.forks_count;
       this.issues = data.open_issues;
       this.pushedAt = new Date(data.pushed_at);
       this.stargazers = data.stargazers_count;
       this.author = data.owner.login;
 
-      // Save only necessary data to cookie cache.
+      // Save only necessary data to local cache.
       this.setCache(repo);
 
       this.fullData = data;
@@ -35,7 +43,7 @@ angular.module('githubRepo', [])
      * Set cache, if available.
      */
     GitHubRepo.prototype.setCache = function (repo) {
-      $cookieStore && $cookieStore.put('githubRepo:' + repo, this);
+      cache[repo] = this;
     };
 
     var factory = {};
@@ -44,7 +52,7 @@ angular.module('githubRepo', [])
      * Get cached data, if any.
      */
     factory.fecthCached = function (repo) {
-      return $cookieStore && $cookieStore.get('githubRepo:' + repo) || null;
+      return cache[repo] || null;
     };
 
     /**
@@ -120,3 +128,4 @@ angular.module('githubRepo', [])
       }
     };
   });
+
